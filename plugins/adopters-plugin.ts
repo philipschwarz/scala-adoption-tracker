@@ -11,7 +11,7 @@ export interface Adopter {
   logoUrl: string;
   website: string;
   usage: string;
-  adoptionStatus: AdoptionStatus;
+  scala3AdoptionStatus: AdoptionStatus | null;
   category: Category;
   size: number;
   sources: string[];
@@ -19,7 +19,6 @@ export interface Adopter {
 
 export interface AdoptersContent {
   adopters: Adopter[];
-  summary: Record<AdoptionStatus, number>;
   lastUpdated: string;
 }
 
@@ -37,8 +36,8 @@ const allowedCategories: Record<string, Category> = {
 };
 
 function validateString(value: unknown, name: string, fileName: string): string {
-  if (typeof value !== 'string' || value.trim() === '') {
-    throw new Error(`Field "${name}" in ${fileName} must be a non-empty string`);
+  if (typeof value !== 'string') {
+    throw new Error(`Field "${name}" in ${fileName} must be a string`);
   }
   return value.trim();
 }
@@ -56,13 +55,16 @@ function validateNumber(value: unknown, name: string, fileName: string): number 
   throw new Error(`Field "${name}" in ${fileName} must be a number`);
 }
 
-function parseAdoptionStatus(value: unknown, fileName: string): AdoptionStatus {
-  const status = validateString(value, 'adoptionStatus', fileName).toLowerCase();
+function parseAdoptionStatus(value: unknown, fileName: string): AdoptionStatus | null {
+  if (value == null || (typeof value === 'string' && value.trim() === '')) {
+    return null;
+  }
+  const status = validateString(value, 'scala3AdoptionStatus', fileName).toLowerCase();
   const normalized = allowedStatuses[status];
   if (!normalized) {
     const allowed = Object.keys(allowedStatuses).join(', ');
     throw new Error(
-      `Invalid adoptionStatus "${value}" in ${fileName}. Allowed values: ${allowed}`,
+      `Invalid scala3AdoptionStatus "${value}" in ${fileName}. Allowed values: ${allowed}`,
     );
   }
   return normalized;
@@ -112,7 +114,7 @@ function loadAdopters(siteDir: string): AdoptersContent {
         logoUrl: validateString((data as any).logoUrl, 'logoUrl', fileName),
         website: validateString((data as any).website, 'website', fileName),
         usage: validateString((data as any).usage, 'usage', fileName),
-        adoptionStatus: parseAdoptionStatus((data as any).adoptionStatus, fileName),
+        scala3AdoptionStatus: parseAdoptionStatus((data as any).scala3AdoptionStatus, fileName),
         category: parseCategory((data as any).category, fileName),
         size: validateNumber((data as any).size, 'size', fileName),
         sources: parseSources((data as any).sources, fileName),
@@ -129,19 +131,8 @@ function loadAdopters(siteDir: string): AdoptersContent {
     throw new Error(`No adopter entries found at ${adoptersDir}`);
   }
 
-  const summary: Record<AdoptionStatus, number> = {
-    'not planned': 0,
-    planned: 0,
-    partial: 0,
-    full: 0,
-  };
-  entries.forEach((entry) => {
-    summary[entry.adoptionStatus] += 1;
-  });
-
   return {
     adopters: entries,
-    summary,
     lastUpdated: new Date().toISOString().slice(0, 10),
   };
 }

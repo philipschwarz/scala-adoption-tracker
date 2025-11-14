@@ -27,9 +27,9 @@ Each YAML file under `adopters/` should contain:
 - `logoUrl` – absolute URL to a PNG/SVG logo
 - `website` – canonical homepage
 - `usage` – short explanation of how Scala is used
-- `adoptionStatus` – one of `not planned`, `planned`, `partial`, `full`
+- `scala3AdoptionStatus` – one of `not planned`, `planned`, `partial`, `full` (or `null` if unknown)
 - `sources` – list of links or short notes backing up the claim
-- `size` – integer headcount (used for ordering)
+- `size` – integer used for ordering (for OSS projects, use an approximate GitHub star count)
 - `category` – `product company`, `OSS project`, or `consulting company`
 
 Because the Docusaurus build imports and validates those YAML files directly, any malformed entry will fail CI immediately—simply run `npm run build` before opening a PR.

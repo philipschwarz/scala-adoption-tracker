@@ -1,0 +1,9 @@
+name: Chisel
+logoUrl: https://avatars.githubusercontent.com/u/46612642
+website: https://www.chisel-lang.org/
+usage: ""
+scala3AdoptionStatus: full
+category: OSS project
+size: 17000 # stars
+sources:
+  - https://github.com/lichess-org/lila

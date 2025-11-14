@@ -58,6 +58,15 @@
   font-size: 1.15rem;
 }
 
+.adopter-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.adopter-link:hover {
+  text-decoration: underline;
+}
+
 .adopter-logo {
   max-height: 48px;
   max-width: 64px;
@@ -65,24 +74,43 @@
   margin-left: auto;
 }
 
-.adopter-card ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.adopter-usage {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.adoption-badge {
+  align-self: flex-start;
+  background: var(--ifm-color-gray-600);
+  color: var(--ifm-color-white);
+  border-radius: 999px;
+  padding: 0.2rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .adopter-sources {
   margin-top: 0.75rem;
 }
 
-.adopter-sources ul {
-  list-style: disc;
-  padding-left: 1.25rem;
-  margin: 0.35rem 0 0;
+.adopter-sources summary {
+  cursor: pointer;
+  font-weight: 600;
 }
 
-.adopter-usage {
-  margin-top: 0;
-  margin-bottom: 0.75rem;
+.adopter-sources ul {
+  margin: 0.4rem 0 0;
+  padding-left: 1.2rem;
+}
+
+.category-section {
+  margin-top: 2rem;
+}
+
+.last-updated {
+  margin-top: 2rem;
+  font-size: 0.9rem;
   color: var(--ifm-color-emphasis-700);
+  text-align: center;
 }

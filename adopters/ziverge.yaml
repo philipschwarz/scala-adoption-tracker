@@ -1,0 +1,10 @@
+name: Ziverge
+logoUrl: https://avatars.githubusercontent.com/u/58878508
+website: https://ziverge.com/
+usage: ""
+scala3AdoptionStatus: null
+category: consulting company
+size: 50
+sources:
+  - https://ziverge.com/
+  - Conference presentations about production Scala 3 migrations

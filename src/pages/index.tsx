@@ -1,114 +1,112 @@
 import type {ReactNode} from 'react';
 import Heading from '@theme/Heading';
 import Layout from '@theme/Layout';
-import {usePluginData} from '@docusaurus/useGlobalData';
+import useGlobalData from '@docusaurus/useGlobalData';
 
 import type {
-  Adopter,
-  AdoptionStatus,
-  AdoptersContent,
+    Adopter,
+    AdoptionStatus,
+    AdoptersContent,
+    Category,
 } from '@site/plugins/adopters-plugin';
 
-const statusLabels: Record<AdoptionStatus, string> = {
-  'not planned': 'Not planned',
-  planned: 'Planned',
-  partial: 'Partial',
-  full: 'Full',
+
+const createStatusElement = (status: AdoptionStatus | undefined): ReactNode => {
+    if (!status) return null;
+    const formatted = status === 'full' || status === 'partial' ? 'Scala 3' : null;
+    if (!formatted) return null;
+    return <span className="adoption-badge">{formatted}</span>;
 };
 
-const statusOrder: AdoptionStatus[] = ['not planned', 'planned', 'partial', 'full'];
+const categoryOrder: { key: Category; label: string }[] = [
+    {key: 'product company', label: 'Product companies'},
+    {key: 'OSS project', label: 'OSS projects'},
+    {key: 'consulting company', label: 'Consulting companies'},
+];
 
-function AdopterCard({adopter}: {adopter: Adopter}): ReactNode {
-  return (
-    <article className="adopter-card">
-      <div className="adopter-card__header">
-        <Heading as="h3">{adopter.name}</Heading>
-        <img
-          className="adopter-logo"
-          src={adopter.logoUrl}
-          alt={`${adopter.name} logo`}
-          loading="lazy"
-        />
-      </div>
-      <p className="adopter-usage">{adopter.usage}</p>
-      <ul>
-        <li>
-          <strong>Website:</strong>{' '}
-          <a href={adopter.website} target="_blank" rel="noreferrer">
-            {adopter.website}
-          </a>
-        </li>
-        <li>
-          <strong>Category:</strong> {adopter.category}
-        </li>
-        <li>
-          <strong>Company size:</strong> {adopter.size}
-        </li>
-        <li>
-          <strong>Scala 3 adoption status:</strong> {statusLabels[adopter.adoptionStatus]}
-        </li>
-      </ul>
-      {adopter.sources.length > 0 && (
-        <div className="adopter-sources">
-          <p>
-            <strong>Sources:</strong>
-          </p>
-          <ul>
-            {adopter.sources.map((source) => (
-              <li key={source}>
-                {source.startsWith('http') ? (
-                  <a href={source} target="_blank" rel="noreferrer">
-                    {source}
-                  </a>
-                ) : (
-                  source
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </article>
-  );
+function SourceList({sources}: { sources: string[] }): ReactNode {
+    if (sources.length === 0) {
+        return null;
+    }
+    return (
+        <details className="adopter-sources">
+            <summary>Sources</summary>
+            <ul>
+                {sources.map((source) => (
+                    <li key={source}>
+                        {source.startsWith('http') ? (
+                            <a href={source} target="_blank" rel="noreferrer">
+                                {source}
+                            </a>
+                        ) : (
+                            source
+                        )}
+                    </li>
+                ))}
+            </ul>
+        </details>
+    );
+}
+
+function AdopterCard({adopter}: { adopter: Adopter }): ReactNode {
+    return (
+        <article className="adopter-card">
+            <div className="adopter-card__header">
+                <Heading as="h3">
+                    <a href={adopter.website} target="_blank" rel="noreferrer" className="adopter-link">
+                        {adopter.name}
+                    </a>
+                </Heading>
+                <img
+                    className="adopter-logo"
+                    src={adopter.logoUrl}
+                    alt={`${adopter.name} logo`}
+                    loading="lazy"
+                />
+            </div>
+            <p className="adopter-usage">{adopter.usage}</p>
+            {createStatusElement(adopter.scala3AdoptionStatus)}
+            <SourceList sources={adopter.sources}/>
+        </article>
+    );
 }
 
 export default function Home(): ReactNode {
-  const {adopters, summary, lastUpdated} =
-    usePluginData<AdoptersContent>('adopters-plugin');
+    const data = useGlobalData();
+    const pluginData = data['adopters-plugin']?.default as AdoptersContent | undefined;
+    const adopters = pluginData?.adopters ?? [];
+    const lastUpdated = pluginData?.lastUpdated ?? 'unknown date';
 
-  return (
-    <Layout description="Crowdsourced list of companies and projects adopting Scala.">
-      <main className="container margin-vert--lg">
-        <header>
-          <Heading as="h1">Scala Adoption Tracker</Heading>
-          <p>
-            This site compiles public evidence of companies and OSS projects using Scala in
-            production. Contributions happen via YAML files in the{' '}
-            <code>adopters/</code> folder, and the Docusaurus build validates every entry.
-          </p>
-          <p className="margin-bottom--lg">Last updated {lastUpdated}.</p>
-        </header>
+    return (
+        <Layout description="Crowdsourced list of companies and projects adopting Scala.">
+            <main className="container margin-vert--lg">
+                <header>
+                    <Heading as="h1">Scala Adoption Tracker</Heading>
+                    <p>
+                        A curated look at where Scala shows up in the real world—product teams, foundational
+                        OSS, and consulting shops. Everything listed here links back to public proof.
+                    </p>
+                </header>
 
-        <section>
-          <Heading as="h2">Scala 3 adoption snapshot</Heading>
-          <ul>
-            {statusOrder.map((status) => (
-              <li key={status}>
-                <strong>{statusLabels[status]}:</strong> {summary[status] ?? 0}
-              </li>
-            ))}
-          </ul>
-        </section>
+                {categoryOrder.map(({key, label}) => {
+                    const group = adopters.filter((adopter) => adopter.category === key);
+                    if (group.length === 0) {
+                        return null;
+                    }
+                    return (
+                        <section key={key} className="category-section">
+                            <Heading as="h2">{label}</Heading>
+                            <div className="adopters-grid">
+                                {group.map((adopter) => (
+                                    <AdopterCard key={`${key}-${adopter.name}`} adopter={adopter}/>
+                                ))}
+                            </div>
+                        </section>
+                    );
+                })}
 
-        <section>
-          <Heading as="h2">Adopters</Heading>
-          <div className="adopters-grid">
-            {adopters.map((adopter) => (
-              <AdopterCard key={adopter.name} adopter={adopter} />
-            ))}
-          </div>
-        </section>
-      </main>
-    </Layout>
-  );
+                <p className="last-updated">Data last refreshed on {lastUpdated}.</p>
+            </main>
+        </Layout>
+    );
 }
