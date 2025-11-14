@@ -58,7 +58,7 @@ object GenerateAdopters:
   private val yaml = new org.yaml.snakeyaml.Yaml()
   private val repoRoot: Path = Paths.get(Option(System.getProperty("repo.root")).getOrElse(".")).toAbsolutePath
   private val adoptersDir = repoRoot.resolve("adopters")
-  private val outputFile = repoRoot.resolve("src").resolve("pages").resolve("index.md")
+  private val outputFile = repoRoot.resolve("src").resolve("pages").resolve("index.mdx")
   def main(args: Array[String]): Unit =
     if !Files.isDirectory(adoptersDir) then
       System.err.println(s"No adopters found at ${adoptersDir.toAbsolutePath}")
@@ -149,22 +149,47 @@ object GenerateAdopters:
     builder.append("## Scala 3 adoption snapshot\n\n")
     summaryLines.foreach(line => builder.append(line).append('\n'))
     builder.append("\n## Adopters\n\n")
+    builder.append("<div className=\"adopters-grid\">\n")
 
     adopters.foreach { adopter =>
-      builder.append(s"### ${adopter.name}\n\n")
-      builder.append(s"![${adopter.name} logo](${adopter.logoUrl})\n\n")
-      builder.append(s"- **Website:** [${adopter.website}](${adopter.website})\n")
-      builder.append(s"- **Category:** ${adopter.category.label}\n")
-      builder.append(s"- **Company size:** ${adopter.size}\n")
-      builder.append(s"- **Scala 3 adoption status:** ${adopter.scala3AdoptionStatus.label}\n")
-      builder.append(s"- **Usage:** ${adopter.usage}\n")
+      builder.append("\n<article className=\"adopter-card\">\n")
+      builder.append("<div className=\"adopter-card__header\">\n")
+      builder.append(s"<h3>${escapeHtml(adopter.name)}</h3>\n")
+      builder.append(s"""<img src="${escapeHtml(adopter.logoUrl)}" alt="${escapeHtml(adopter.name)} logo" className="adopter-logo" loading="lazy"/>""")
+      builder.append("\n</div>\n")
+      builder.append(s"<p className=\"adopter-usage\">${escapeHtml(adopter.usage)}</p>\n")
+      builder.append("<ul>\n")
+      builder.append(s"<li><strong>Website:</strong> ${renderLink(adopter.website)}</li>\n")
+      builder.append(s"<li><strong>Category:</strong> ${escapeHtml(adopter.category.label)}</li>\n")
+      builder.append(s"<li><strong>Company size:</strong> ${adopter.size}</li>\n")
+      builder.append(s"<li><strong>Scala 3 adoption status:</strong> ${escapeHtml(adopter.scala3AdoptionStatus.label)}</li>\n")
+      builder.append("</ul>\n\n")
       if adopter.sources.nonEmpty then
-        builder.append("- **Sources:**\n")
+        builder.append("<div className=\"adopter-sources\">\n<p><strong>Sources:</strong></p>\n<ul>\n")
         adopter.sources.foreach { source =>
-          val bullet = if source.startsWith("http") then s"  - [${source}](${source})" else s"  - ${source}"
-          builder.append(bullet).append('\n')
+          val entry =
+            if source.startsWith("http") then s"<a href=\"${escapeHtml(source)}\" target=\"_blank\" rel=\"noreferrer\">${escapeHtml(source)}</a>"
+            else escapeHtml(source)
+          builder.append(s"<li>${entry}</li>\n")
         }
-      builder.append('\n')
+        builder.append("</ul>\n</div>\n")
+      builder.append("</article>\n")
     }
 
+    builder.append("</div>\n")
+
     builder.toString()
+
+  private def escapeHtml(text: String): String =
+    text.flatMap {
+      case '&' => "&amp;"
+      case '<' => "&lt;"
+      case '>' => "&gt;"
+      case '"' => "&quot;"
+      case '\'' => "&#39;"
+      case other => other.toString
+    }
+
+  private def renderLink(url: String): String =
+    val safe = escapeHtml(url)
+    s"""<a href="$safe" target="_blank" rel="noreferrer">$safe</a>"""
