@@ -1,0 +1,11 @@
+name: Coursera
+logoUrl: https://logo.clearbit.com/coursera.org
+website: https://www.coursera.org
+description: >
+  An online education platform.
+scala3AdoptionStatus: null
+sources:
+  - https://github.com/coursera/courier - 49% Scala and active as of 2025-11-18
+  - https://github.com/coursera/courscala - 98.9% Scala, last commit from 2024-04-18
+size: 1200
+category: product company

@@ -1,0 +1,11 @@
+name: Databricks
+logoUrl: https://logo.clearbit.com/databricks.com
+website: https://databricks.com
+description: >
+  Unified data and AI platform.
+scala3AdoptionStatus: null
+sources:
+  - Major Spark contributor
+  - Multiple scala repos https://github.com/databricks?q=&type=all&language=scala
+size: 8000
+category: product company

@@ -1,0 +1,10 @@
+name: Snowplow
+logoUrl: https://logo.clearbit.com/snowplow.io
+website: https://snowplow.io
+description: >
+  Customer Data Infrastructure.
+scala3AdoptionStatus: null
+sources:
+  - https://github.com/snowplow/snowplow - 47% Scala as of 2025-11-16
+size: 7000
+category: OSS project

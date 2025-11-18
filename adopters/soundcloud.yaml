@@ -1,0 +1,11 @@
+name: SoundCloud
+logoUrl: https://logo.clearbit.com/soundcloud.com
+website: https://soundcloud.com
+description: >
+  Online audio distribution platform.
+scala3AdoptionStatus: null
+sources:
+  - https://github.com/soundcloud/twinagle - 100% Scala and active as of 2025-11-16
+  - https://developers.soundcloud.com/blog/learning-scala-at-soundcloud
+size: 500
+category: product company

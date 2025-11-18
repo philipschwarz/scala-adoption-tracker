@@ -9,6 +9,7 @@ import type {
     AdoptersContent,
     Category,
 } from '@site/plugins/adopters-plugin';
+import Linkify from "linkify-react";
 
 
 const createStatusElement = (status: AdoptionStatus | undefined): ReactNode => {
@@ -33,15 +34,7 @@ function SourceList({sources}: { sources: string[] }): ReactNode {
             <summary>Sources</summary>
             <ul>
                 {sources.map((source) => (
-                    <li key={source}>
-                        {source.startsWith('http') ? (
-                            <a href={source} target="_blank" rel="noreferrer">
-                                {source}
-                            </a>
-                        ) : (
-                            source
-                        )}
-                    </li>
+                    <li key={source}><Linkify>{source}</Linkify></li>
                 ))}
             </ul>
         </details>

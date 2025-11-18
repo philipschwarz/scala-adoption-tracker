@@ -1,0 +1,10 @@
+name: Foursquare
+logoUrl: https://logo.clearbit.com/foursquare.com
+website: https://foursquare.com
+description: >
+  Location‑intelligence services and consumer apps.
+scala3AdoptionStatus: null
+sources:
+  - https://github.com/foursquare/fsqio - 73% Scala as of 2025-11-16, last commit from 2024
+size: 400
+category: product company

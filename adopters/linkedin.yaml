@@ -1,0 +1,10 @@
+name: LinkedIn
+logoUrl: https://logo.clearbit.com/linkedin.com
+website: https://www.linkedin.com
+description: >
+  Professional networking platform and technology company.
+scala3AdoptionStatus: null
+sources:
+  - https://github.com/linkedin/isolation-forest - 77% Scala and active as of 2025-11-16
+size: 18000
+category: product company

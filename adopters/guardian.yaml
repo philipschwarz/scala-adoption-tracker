@@ -1,0 +1,10 @@
+name: Guardian Media Group
+logoUrl: https://avatars.githubusercontent.com/u/164318?s=200&v=4
+website: https://www.theguardian.com
+description: >
+  The Guardian newspaper and more.
+scala3AdoptionStatus: null
+sources:
+  - https://github.com/guardian/grid - 47% Scala and active as of 2025-11-16
+size: 1200
+category: product company
