@@ -1,0 +1,10 @@
+name: IRS (Internal Revenue Service)
+logoUrl: https://logo.clearbit.com/irs.gov
+website: https://www.irs.gov
+description: |
+  U.S. government agency responsible for tax collection and tax law enforcement.
+scala3AdoptionStatus: partial # scala 3 in OSS repos, no info from inside
+category: product company
+size: 90000
+sources:
+  - https://github.com/IRS-Public - two repositories, both containing Scala and updated in Nov 2025
