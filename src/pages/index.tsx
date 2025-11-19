@@ -16,7 +16,7 @@ const createStatusElement = (status: AdoptionStatus | undefined): ReactNode => {
     if (!status) return null;
     const formatted = status === 'full' || status === 'partial' ? 'Scala 3' : null;
     if (!formatted) return null;
-    return <span className="adoption-badge">{formatted}</span>;
+    return <span className="adoption-badge" title={status}>{formatted}</span>;
 };
 
 const categoryOrder: { key: Category; label: string }[] = [
